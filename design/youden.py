@@ -1,6 +1,6 @@
 """ Generate a Youden Square """
 import numpy as np
-from design import _unroll
+from .utils import _unroll
 
 
 def youden(treatments, reps=None, randomize=None, seed=None, unroll=None):

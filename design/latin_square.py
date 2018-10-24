@@ -1,7 +1,7 @@
 """ Generate Latin Squares """
 import numpy as np
 from math import floor
-from design import _unroll
+from .utils import _unroll
 
 _MAX_ITERATIONS = 10000
 

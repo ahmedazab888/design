@@ -1,6 +1,6 @@
 """ Generate Graeco-Latin Squares """
-from design.latin_square import latin_square
-from design import _unroll
+from .latin_square import latin_square
+from .utils import _unroll
 import numpy as np
 
 
@@ -50,13 +50,11 @@ def greaco_latin_square(k, factor_1_labels=None, factor_2_labels=None, seed=None
     while True:
         n_iter += 1
         latin_square_1 = latin_square(k,
-                                      treatment_names=factor_1_labels,
-                                      randomize=True,
+                                      factor_labels=factor_1_labels,
                                       seed=seed * n_iter)
 
         latin_square_2 = latin_square(k,
-                                      treatment_names=factor_2_labels,
-                                      randomize=True,
+                                      factor_labels=factor_2_labels,
                                       seed=35 * seed * n_iter)
         if _is_orthoganal(k, latin_square_1, latin_square_2):
             break

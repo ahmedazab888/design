@@ -42,11 +42,11 @@ def cr(treatments, reps, seed=None):
     for idx, r in enumerate(reps):
         treatment.extend([treatments[idx]] * r)
         rep.extend(list(range(1, r + 1)))
+    np.random.shuffle(treatment)
 
-    design_matrix = np.array([rep, treatment])
+    design_matrix = np.transpose(np.array([treatment]))
 
     if seed:
         np.random.seed(seed)
-    np.random.shuffle(design_matrix)
 
     return design_matrix

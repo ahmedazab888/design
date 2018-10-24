@@ -1,7 +1,7 @@
 """ Generates a Lattice Design """
 import math
 import numpy as np
-from design import latin_square
+from .latin_square import latin_square
 
 
 def lattice(treatments, r, randomize=None, seed=None):
@@ -36,7 +36,7 @@ def lattice(treatments, r, randomize=None, seed=None):
 
     square_1 = np.array(square_1)
     square_2 = np.transpose(square_1)
-    latin_square_trt = latin_square(k, seed=seed * 7218, unroll=True)[, 2]
+    latin_square_trt = latin_square(k, seed=seed * 7218, unroll=True)[:, 2]
     order = [i[0] for i in sorted(enumerate(latin_square_trt), key=lambda x:x[1])]
     square_3 = np.zeros((k, k))
     for idx, o in enumerate(order):

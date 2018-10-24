@@ -21,16 +21,21 @@ def strip(treatments_r, treatments_c, reps, randomize=None, seed=None):
         np.random.seed(seed)
     n_1 = len(treatments_r)
     n_2 = len(treatments_c)
-    row = []
-    column = []
+    row_treatment = []
+    column_treatment = []
     block = []
+    row = [list(range(1, n_1 + 1))] * n_2 * reps
+    col = []
     for r in range(reps):
         if randomize:
             np.random.shuffle(treatments_r)
             np.random.shuffle(treatments_c)
-        for i in range(n_1):
-            row.extend(treatments_r)
-            column.extend(treatments_r[i] * n_2)
+        for i in range(n_2):
+            row_treatment.extend(treatments_r)
+            column_treatment.extend(treatments_c[i] * n_1)
+            col.append([i + 1] * n_1)
         block.extend([r + 1] * n_1 * n_2)
-    design_matrix = np.transpose(np.array([block, row, column]))
+    col = [val for sublist in col for val in sublist]
+    row = [val for sublist in row for val in sublist]
+    design_matrix = np.transpose(np.array([block, row, col, row_treatment, column_treatment]))
     return design_matrix

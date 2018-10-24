@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 
-def factorial_2(k, p=None, contrasts=None):
+def factorial_2(k, p=None, contrasts=None, randomize=None, seed=None):
     """ Generate :math:`2^{k}` and :math:`2^{k-p}` factorial designs
 
 
@@ -43,22 +43,49 @@ def factorial_2(k, p=None, contrasts=None):
 
         if p != len(contrasts):
             raise ValueError('`p` ({}) must be equal to the length of `contrasts` ({})'.format(p, len(contrasts)))
+    else:
+        p = 0
 
     # Generate for k - p
+    levels = [-1, 1]
     design = []
+    n = 2**(k - p)
+    for i in range(k - p):
+        length = 2**i
 
-    # resolution = min(length of word)
-    word_lengths = [len(contrast) for contrast in contrasts]
-    resolution = min(word_lengths)
+        # Create the repeating section
+        rep_section = [levels[0]] * length
+        rep_section.extend([levels[1]] * length)
+        col = []
+        # Repeat that section
+        reps = k - p - i - 1
+        for r in range(2**reps):
+            col.extend(rep_section)
+        design.append(col)
 
-    # Create the contrast columns
-    contrast_columns = []
-    for contrast in contrasts:
-        contrast_column = design[contrast[0]]
-        for col in contrast.pop(0):
-            contrast_column = [math.copysign(1, col) * x * y for
-                               x, y in zip(contrast_column, design[abs(col)])]
-        contrast_columns.append(contrast_column)
+    # Handle the contrasts
+    if contrasts is not None:
+        word_lengths = [len(contrast) for contrast in contrasts]
+        resolution = min(word_lengths)
+        for contrast in contrasts:
+            print(contrast)
+            contrast_column = design[contrast[0] - 1]
+            for col in contrast[1:]:
+                contrast_column = [math.copysign(1, col - 1) * x * y for
+                                   x, y in zip(contrast_column, design[abs(col)])]
+            design.append(contrast_column)
+        design_matrix = np.transpose(np.array(design))
+    else:
+        resolution = None
+        design_matrix = np.transpose(np.array(design))
 
-    design_matrix = np.transpose(np.array([design, contrast_columns]))
+    if randomize:
+        if seed:
+            np.random.seed(seed)
+        np.transpose(np.random.shuffle(np.transpose(design_matrix)))
+        np.random.shuffle(design_matrix)
+
+    ids = np.array(list(range(1, n + 1)))
+    design_matrix = np.c_[ids, design_matrix]
+
     return design_matrix, resolution

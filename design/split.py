@@ -41,6 +41,6 @@ def split(fixed_treatments, random_treatments, reps, randomize=None, seed=None):
             sub_plot_treatment.extend(random_treatments)
             counter += 1
             plot.extend([counter] * n_r)
-    design_matrix = np.array(
-        [block, plot, sub_plot, plot_treatment, sub_plot_treatment])
+    design_matrix = np.transpose(np.array(
+        [block, plot, sub_plot, plot_treatment, sub_plot_treatment]))
     return design_matrix
